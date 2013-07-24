@@ -15,6 +15,7 @@ words = words.sort_by{rand}
 open("uNoun.csv") {|file|
   while l = file.gets
     idiom << l.chomp
+    idiom << l.chomp.reverse
   end
 }
 
@@ -23,46 +24,20 @@ length = 15
 
 table = Array.new(length){ Array.new(length) }
 
-table[0][0] = words.shift
-
-for i in 1...length
-  while true
-    tmp = words.shift
-    unless (idiom.index(table[0][i-1]+tmp))
-      table[0][i]=tmp
-      break
-    else
-      words << tmp
-    end
-  end
-end
-
-for i in 1...length
-  while true
-    tmp = words.shift
-    word1 = idiom.index(table[i-1][0]+tmp)
-    word2 = idiom.index(tmp+table[i-1][0])
-    unless (word1||word2)
-      table[i][0]=tmp
-      break
-    else
-      words << tmp
-    end
-  end
-  
-  for j in 1...length
+for i in 0...length
+  for j in 0...length
     while true
-    tmp = words.shift
-    word1 = idiom.index(table[i-1][j]+tmp)
-    word2 = idiom.index(tmp+table[i-1][j])
-    word3 = idiom.index(table[i][j-1]+tmp)
-    word4 = idiom.index(tmp+table[i][j-1])
-    unless (word1||word2||word3||word4)
-      table[i][j]=tmp
-      break
-    else
-      words << tmp
-    end
+      tmp = words.shift
+      word1 = i==0                  ? false : idiom.index(table[i-1][j]+tmp)
+      word2 = j==0                  ? false : idiom.index(table[i][j-1]+tmp)
+      word3 = (i==0||j==0)          ? false : idiom.index(table[i-1][j-1]+tmp)
+      word4 = (i==0||j==(length-1)) ? false : idiom.index(table[i-1][j+1]+tmp)
+      unless (word1||word2||word3||word4)
+        table[i][j]=tmp
+        break
+      else
+        words << tmp
+      end
     end
   end
 end
