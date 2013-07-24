@@ -19,6 +19,14 @@ open("uNoun.csv") {|file|
   end
 }
 
+open("unidic.csv") {|file|
+  while l = file.gets
+    idiom << l.chomp
+    idiom << l.chomp.reverse
+  end
+}
+
+idiom = idiom.uniq
 # 表の大きさ
 length = 15
 
